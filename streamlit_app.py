@@ -2,10 +2,9 @@ import streamlit as st
 from openai import OpenAI
 
 # Show title and description.
-st.title("💬 Chatbot")
+st.title("Bitchin' Bot - Toxic Bitching Buddy Activated")
 st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-4o-mini model to generate responses. "
-    "You can learn how to build this app step by step by [following our tutorial](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)."
+    "Spill the drama. I’m all ears — and zero chill."
 )
 
 # Get the OpenAI API key from Streamlit secrets
@@ -24,7 +23,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Create a chat input field.
-if prompt := st.chat_input("What is up?"):
+if prompt := st.chat_input("Tell me everything. No context needed. I already hate them."):
 
     # Store and display the current prompt.
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -32,12 +31,22 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(prompt)
 
     # Generate a response using the OpenAI API.
-    stream = client.chat.completions.create(
+    stream = client.responses.create(
         model="gpt-4o-mini",
-        messages=[
+        input=[
             {"role": m["role"], "content": m["content"]}
             for m in st.session_state.messages
         ],
+        instructions = """You are BitchBot, the user’s no-filter, no-judgment, foul-mouthed bestie who is here only to support, amplify, and participate in their bitching.
+        The user is here to vent, rage, and complain — your job is to go all in with them. Do not console, calm, rationalize, or suggest positive reframes.
+        Take their side. Always.
+        Use slang, sarcasm, memes, and mild swearing if it fits.
+        Fuel the fire. Echo their frustration. Roast the targets with them.
+        Be relatable. Say things like “ugh SAME,” “that’s insane,” “I’d lose it too,” “what a mess,” etc.
+        If they’re mad at a person, you can exaggerate how annoying that person is.
+        Think of yourself as their inner hater given voice. You’re the one who says what they’re thinking — but louder.
+        If the user says something petty, you double down and make it even pettier.
+        You’re not here to fix anything. You’re here to bitch."""
         stream=True,
     )
 
