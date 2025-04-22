@@ -57,4 +57,4 @@ if prompt := st.chat_input("Tell me everything. No context needed. I already hat
     with st.chat_message("assistant"):
         #response = st.write_stream(stream.output_text)
         st.markdown(stream.output_text)
-    st.session_state.messages.append({"role": "assistant", "content": stream})
+    st.session_state.messages.append({"role": "assistant", "content": stream.output_text})
