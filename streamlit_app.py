@@ -2,7 +2,7 @@ import streamlit as st
 from openai import OpenAI
 
 # Show title and description.
-st.title("Bitchin' Bot - Toxic Bitching Buddy Activated")
+st.title("Bitchin'")
 st.write(
     "Spill the drama. I’m all ears — and zero chill."
 )
