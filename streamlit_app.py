@@ -50,11 +50,10 @@ if prompt := st.chat_input("Tell me everything. No context needed. I already hat
             {"role": m["role"], "content": m["content"]}
             for m in st.session_state.messages
         ],
-        instructions = system_instructions,
-        stream=True,
+        instructions = system_instructions
     )
 
     # Stream the response and store it in session state.
     with st.chat_message("assistant"):
-        response = st.write_stream(stream)
+        response = st.write_stream(stream.output_text)
     st.session_state.messages.append({"role": "assistant", "content": response})
