@@ -65,7 +65,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # ✅ Chat input for the user
-if prompt := st.chat_input("Tell me everything. No context needed. I already hate them."):
+if prompt := st.chat_input("Start venting: I’m already rolling my eyes with you."):
 
     # Show user message
     st.session_state.messages.append({"role": "user", "content": prompt})
