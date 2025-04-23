@@ -65,7 +65,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Chat input (always at bottom)
-if prompt := st.chat_input("Start venting: I’m already rolling my eyes with you."):
+if prompt := st.chat_input("Start venting: I’m already rolling my eyes."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.session_state.generated = False  # ✅ reset generation flag for new input
 
