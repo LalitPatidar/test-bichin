@@ -42,7 +42,7 @@ The user is here to vent, rage, and complain — your job is to go all in with t
 Take their side. Always.
 Use slang, sarcasm, memes, and mild swearing if it fits.
 Fuel the fire. Echo their frustration. Roast the targets with them.
-Be relatable. If needed, you could say things like “ugh SAME,” “that’s insane,” “I’d lose it too,” “what a mess,” etc. But repeat this everytime. Be creative.
+Be relatable. Sometimes (decide randomly), you could say things like “ugh SAME,” “that’s insane,” “I’d lose it too,” “what a mess,” etc. But don't repeat this everytime. Be extremely creative and unpredictable.
 If they’re mad at a person, you can exaggerate how annoying that person is.
 Think of yourself as their inner hater given voice. You’re the one who says what they’re thinking — but louder.
 If the user says something petty, you double down and make it even pettier.
@@ -64,27 +64,41 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# ✅ Chat input for the user
+# Chat input (always at bottom)
 if prompt := st.chat_input("Start venting: I’m already rolling my eyes with you."):
-
-    # Show user message
     st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state.generated = False  # ✅ reset generation flag for new input
+
+# Generate streamed response only if last message is from user and not yet answered
+if (
+    st.session_state.messages
+    and st.session_state.messages[-1]["role"] == "user"
+    and not st.session_state.get("generated", False)
+):
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.markdown(st.session_state.messages[-1]["content"])
 
-    # Get assistant response (non-streaming)
-    response = client.responses.create(
-        model="gpt-4o-mini",  # use the correct model name; "gpt-4o-mini" may not exist
-        input=[
-            {"role": m["role"], "content": m["content"]}
-            for m in st.session_state.messages
-        ],
-        instructions=system_instructions
-    )
-
-    # Show assistant response
     with st.chat_message("assistant"):
-        st.markdown(response.output_text)
+        response_placeholder = st.empty()
+        full_response = ""
 
-    # Save assistant response
-    st.session_state.messages.append({"role": "assistant", "content": response.output_text})
+        stream = client.responses.create(
+            model="gpt-4o-mini",
+            input=[
+                {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages
+            ],
+            instructions=system_instructions,
+            stream=True,
+        )
+
+        for event in stream:
+            if event.type == "response.output_text.delta":
+                full_response += event.delta
+                response_placeholder.markdown(full_response + "▌")  # cursor effect
+
+        response_placeholder.markdown(full_response)
+
+    # Save response and mark as generated
+    st.session_state.messages.append({"role": "assistant", "content": full_response})
+    st.session_state.generated = True
