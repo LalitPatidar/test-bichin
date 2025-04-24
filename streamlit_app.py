@@ -123,6 +123,6 @@ if (
 # ⚖️ Legal disclaimer footer
 st.markdown("---")
 st.markdown(
-    "<div style='font-size: 11px; color: #888;'>By using this app, you agree not to include real names or identifying info. This is a safe space to vent — not to attack.</div>",
+    "<div style='text-align: center; font-size: 11px; color: #888;'>By using this app, you agree not to include real names or identifying info. This is a safe space to vent — not to attack.</div>",
     unsafe_allow_html=True
 )
